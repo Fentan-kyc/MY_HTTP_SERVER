@@ -29,9 +29,10 @@ namespace MyHTTPServer.Handlers
 
                     var request = RequestParser.Parse(buffer);
 
-                    var filePath = Path.Combine(_path, request.Path);
+                    var filePath = Path.Combine(_path, request.Path.Substring(1));
 
                     Console.WriteLine("\n" + request);
+                    Console.WriteLine(filePath);
 
                     writer.WriteLine("Static File");
                 }
