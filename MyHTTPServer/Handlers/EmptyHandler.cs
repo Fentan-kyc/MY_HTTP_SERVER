@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyHTTPServer.Handlers
 {
-    public class EmptyHandler : IHandler
+    public sealed class EmptyHandler : IHandler
     {
         public void Handle(Stream stream)
         {

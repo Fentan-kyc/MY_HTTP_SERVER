@@ -11,7 +11,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            MyHTTPServerHost host = new MyHTTPServerHost(new EmptyHandler());
+            MyHTTPServerHost host = new MyHTTPServerHost(new StaticFileHandler());
             host.Start();
         }
     }
