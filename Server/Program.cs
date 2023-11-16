@@ -1,4 +1,5 @@
 ﻿using MyHTTPServer;
+using MyHTTPServer.Handlers;
 using System;
 using System.IO;
 using System.Net;
@@ -10,7 +11,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            MyHTTPServerHost host = new MyHTTPServerHost();
+            MyHTTPServerHost host = new MyHTTPServerHost(new EmptyHandler());
             host.Start();
         }
     }

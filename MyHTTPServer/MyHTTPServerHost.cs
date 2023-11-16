@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyHTTPServer.Handlers;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -7,36 +8,38 @@ namespace MyHTTPServer
 {
     public sealed class MyHTTPServerHost
     {
-        private readonly int _port;
+        private readonly int _port = 80;
+        private readonly IHandler _handler;
 
-        public MyHTTPServerHost(int port = 80)
+        public MyHTTPServerHost()
         {
+            _handler = new EmptyHandler();
+        }
+
+        public MyHTTPServerHost(int port)
+        {
+            _port = port;
+        }
+
+        public MyHTTPServerHost(IHandler handler, int port = 80)
+        {
+            _handler = handler;
             _port = port;
         }
 
         public void Start()
         {
-            Console.WriteLine("Hello");
-
+            Console.WriteLine("Starting Server...");
             TcpListener listener = new TcpListener(IPAddress.Any, 80);
             listener.Start();
+            Console.WriteLine("done.");
 
             while (true)
             {
                 var client = listener.AcceptTcpClient();
                 using (var stream = client.GetStream())
                 {
-                    using (var reader = new StreamReader(stream))
-                    using (var writer = new StreamWriter(stream))
-                    {
-                        for (string line = null; line != string.Empty; line = reader.ReadLine())
-                        {
-                            var result = reader.ReadLine() ?? string.Empty;
-                            Console.WriteLine(result);
-                        }
-
-                        writer.WriteLine("Hi, It's the simplest server in the hood.");
-                    }
+                    _handler.Handle(stream);
                 }
             }
         }
