@@ -11,7 +11,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            MyHTTPServerHost host = new MyHTTPServerHost(new StaticFileHandler());
+            MyHTTPServerHost host = new MyHTTPServerHost(new StaticFileHandler(Path.Combine(Environment.CurrentDirectory, "www")));
             host.Start();
         }
     }

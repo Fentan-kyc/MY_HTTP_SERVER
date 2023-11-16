@@ -9,4 +9,10 @@
     <ProjectReference Include="..\MyHTTPServer\MyHTTPServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="www\Index.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

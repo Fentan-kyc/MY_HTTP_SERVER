@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.IO;
+using MyHTTPServer.Parsers;
 
 namespace MyHTTPServer.Handlers
 {
     public sealed class StaticFileHandler : IHandler
     {
+        private readonly string _path;
+        public StaticFileHandler(string path)
+        {
+            _path = path;
+        }
         public void Handle(Stream stream)
         {
             List<string> buffer = new List<string>();
@@ -21,9 +27,11 @@ namespace MyHTTPServer.Handlers
                         Console.WriteLine(line);
                     }
 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Total fields: {buffer.Count}");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    var request = RequestParser.Parse(buffer);
+
+                    var filePath = Path.Combine(_path, request.Path);
+
+                    Console.WriteLine("\n" + request);
 
                     writer.WriteLine("Static File");
                 }
