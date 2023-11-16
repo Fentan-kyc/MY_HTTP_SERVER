@@ -19,7 +19,7 @@ namespace Server
             {
                 using(var reader = new StreamReader(stream))
                 {
-                    while (true)
+                    for(string line = null; line != string.Empty; line = reader.ReadLine())
                     {
                         var result = reader.ReadLine();
                         Console.WriteLine(result);
