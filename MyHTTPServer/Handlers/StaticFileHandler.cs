@@ -13,13 +13,13 @@ namespace MyHTTPServer.Handlers
         {
             _path = path;
         }
-        public void Handle(Stream stream)
+        public void Handle(Stream neteworkStream)
         {
             List<string> buffer = new List<string>();
 
-            using (var reader = new StreamReader(stream))
+            using (var reader = new StreamReader(neteworkStream))
             {
-                using (var writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(neteworkStream))
                 {
                     for (string line = null; line != string.Empty; line = reader.ReadLine())
                     {
@@ -34,7 +34,17 @@ namespace MyHTTPServer.Handlers
                     Console.WriteLine("\n" + request);
                     Console.WriteLine(filePath);
 
-                    writer.WriteLine("Static File");
+                    if(!File.Exists(filePath))
+                    {
+                        //TODO 404 status
+                    }
+                    else
+                    {
+                        using(var fileStream = File.OpenRead(filePath))
+                        {
+                            fileStream.CopyTo(neteworkStream);
+                        }
+                    }
                 }
             }
         }
