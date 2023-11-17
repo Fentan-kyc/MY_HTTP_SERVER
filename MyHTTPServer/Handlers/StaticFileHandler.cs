@@ -14,43 +14,29 @@ namespace MyHTTPServer.Handlers
         {
             _path = path;
         }
-        public void Handle(Stream neteworkStream)
+        public void Handle(Stream networkStream, Request request)
         {
-            List<string> buffer = new List<string>();
-
-            using (var reader = new StreamReader(neteworkStream))
-            {
-                using (var writer = new StreamWriter(neteworkStream))
+                using (var writer = new StreamWriter(networkStream))
                 {
-                    for (string line = null; line != string.Empty; line = reader.ReadLine())
-                    {
-                        if (!string.IsNullOrEmpty(line)) buffer.Add(line);
-                        Console.WriteLine(line);
-                    }
-
-                    var request = RequestParser.Parse(buffer);
-
                     var filePath = Path.Combine(_path, request.Path.Substring(1));
 
-                    Console.WriteLine("\n" + request);
+                    Console.WriteLine("\n" + $"Request: {request}");
                     Console.WriteLine(filePath);
 
                     if(!File.Exists(filePath))
                     {
-                        //TODO 404 status
-                        ResponseWriter.WriteStatus(HttpStatusCode.NotFound, neteworkStream);
+                        ResponseWriter.WriteStatus(HttpStatusCode.NotFound, networkStream);
                     }
                     else
                     {
-                        ResponseWriter.WriteStatus(HttpStatusCode.OK, neteworkStream);
+                        ResponseWriter.WriteStatus(HttpStatusCode.OK, networkStream);
 
                         using (var fileStream = File.OpenRead(filePath))
                         {
-                            fileStream.CopyTo(neteworkStream);
+                            fileStream.CopyTo(networkStream);
                         }
                     }
                 }
-            }
         }
     }
 }

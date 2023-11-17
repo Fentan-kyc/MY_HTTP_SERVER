@@ -41,9 +41,9 @@ namespace MyHTTPServer.Handlers
                 return "/" + name + "/" + method.Name;
         }
 
-        public void Handle(Stream stream)
+        public void Handle(Stream stream, Request request)
         {
-            //Todo
+            throw new NotImplementedException();
         }
     }
 }

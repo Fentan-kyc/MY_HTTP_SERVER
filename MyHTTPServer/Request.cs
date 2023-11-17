@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyHTTPServer
 {
-    internal record Request
+    public record Request
     {
         public string Path;
         public HttpMethod Method;

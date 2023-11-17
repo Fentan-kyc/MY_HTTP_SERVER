@@ -1,5 +1,7 @@
 ﻿using MyHTTPServer.Handlers;
+using MyHTTPServer.Parsers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -37,9 +39,22 @@ namespace MyHTTPServer
             while (true)
             {
                 var client = listener.AcceptTcpClient();
-                using (var stream = client.GetStream())
+                using (var networkStream = client.GetStream())
                 {
-                    _handler.Handle(stream);
+                    List<string> buffer = new List<string>();
+
+                    using (var reader = new StreamReader(networkStream))
+                    {
+                        for (string line = null; line != string.Empty; line = reader.ReadLine())
+                        {
+                            if (!string.IsNullOrEmpty(line)) buffer.Add(line);
+                            Console.WriteLine(line);
+                        }
+
+                        var requst = RequestParser.Parse(buffer);
+
+                        _handler.Handle(networkStream, requst);
+                    }
                 }
             }
         }
