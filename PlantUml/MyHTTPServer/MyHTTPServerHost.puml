@@ -1,0 +1,10 @@
+@startuml
+class MyHTTPServerHost <<sealed>> {
+    - <<readonly>> _port : int = 80
+    + MyHTTPServerHost()
+    + MyHTTPServerHost(port:int)
+    + MyHTTPServerHost(handler:IHandler, port:int)
+    + Start() : void
+}
+MyHTTPServerHost --> "_handler" IHandler
+@enduml

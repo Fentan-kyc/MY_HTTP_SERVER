@@ -1,0 +1,8 @@
+@startuml
+class StaticFileHandler <<sealed>> {
+    - <<readonly>> _path : string
+    + StaticFileHandler(path:string)
+    + Handle(neteworkStream:Stream) : void
+}
+IHandler <|-- StaticFileHandler
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+interface IHandler {
+    Handle(stream:Stream) : void
+}
+class MyHTTPServerHost <<sealed>> {
+    - <<readonly>> _port : int = 80
+    + MyHTTPServerHost()
+    + MyHTTPServerHost(port:int)
+    + MyHTTPServerHost(handler:IHandler, port:int)
+    + Start() : void
+}
+MyHTTPServerHost --> "_handler" IHandler
+class Request <<record>> {
+    + Path : string
+    + Request(path:string, method:HttpMethod)
+    + <<override>> ToString() : string
+}
+Request --> "Method" HttpMethod
+class EmptyHandler <<sealed>> {
+    + Handle(stream:Stream) : void
+}
+IHandler <|-- EmptyHandler
+class StaticFileHandler <<sealed>> {
+    - <<readonly>> _path : string
+    + StaticFileHandler(path:string)
+    + Handle(neteworkStream:Stream) : void
+}
+IHandler <|-- StaticFileHandler
+class RequestParser <<static>> {
+    + {static} Parse(buffer:IEnumerable<string>) : Request
+    - {static} GetMethod(name:string) : HttpMethod
+}
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class EmptyHandler <<sealed>> {
+    + Handle(stream:Stream) : void
+}
+IHandler <|-- EmptyHandler
+@enduml

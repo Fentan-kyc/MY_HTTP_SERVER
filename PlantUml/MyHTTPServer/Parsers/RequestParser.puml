@@ -1,0 +1,6 @@
+@startuml
+class RequestParser <<static>> {
+    + {static} Parse(buffer:IEnumerable<string>) : Request
+    - {static} GetMethod(name:string) : HttpMethod
+}
+@enduml

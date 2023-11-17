@@ -1,0 +1,8 @@
+@startuml
+class Request <<record>> {
+    + Path : string
+    + Request(path:string, method:HttpMethod)
+    + <<override>> ToString() : string
+}
+Request --> "Method" HttpMethod
+@enduml
