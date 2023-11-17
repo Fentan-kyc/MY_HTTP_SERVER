@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.IO;
 using MyHTTPServer.Parsers;
+using System.Net;
 
 namespace MyHTTPServer.Handlers
 {
@@ -37,10 +38,13 @@ namespace MyHTTPServer.Handlers
                     if(!File.Exists(filePath))
                     {
                         //TODO 404 status
+                        ResponseWriter.WriteStatus(HttpStatusCode.NotFound, neteworkStream);
                     }
                     else
                     {
-                        using(var fileStream = File.OpenRead(filePath))
+                        ResponseWriter.WriteStatus(HttpStatusCode.OK, neteworkStream);
+
+                        using (var fileStream = File.OpenRead(filePath))
                         {
                             fileStream.CopyTo(neteworkStream);
                         }
