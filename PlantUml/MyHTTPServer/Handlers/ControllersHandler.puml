@@ -1,0 +1,13 @@
+@startuml
+class ControllersHandler {
+    + ControllersHandler(controllersAssembly:Assembly)
+    - GetEndpointMethod(controller:Type, method:MethodInfo) : Func<Object>
+    - GetPath(controller:Type, method:MethodInfo) : String
+    + Handle(networkStream:Stream, request:Request) : void
+    - WriteControllerResponce(response:object, networkStream:Stream) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+IHandler <|-- ControllersHandler
+ControllersHandler --> "_routes<string,Func<object>>" "Dictionary`2"
+@enduml

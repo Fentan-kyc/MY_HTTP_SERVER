@@ -1,0 +1,5 @@
+@startuml
+class ResponseWriter <<static>> {
+    + {static} WriteStatus(code:HttpStatusCode, stream:Stream) : void
+}
+@enduml

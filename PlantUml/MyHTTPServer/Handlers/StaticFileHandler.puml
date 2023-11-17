@@ -2,7 +2,7 @@
 class StaticFileHandler <<sealed>> {
     - <<readonly>> _path : string
     + StaticFileHandler(path:string)
-    + Handle(neteworkStream:Stream) : void
+    + Handle(networkStream:Stream, request:Request) : void
 }
 IHandler <|-- StaticFileHandler
 @enduml

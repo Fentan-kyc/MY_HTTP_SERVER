@@ -1,5 +1,5 @@
 @startuml
 interface IHandler {
-    Handle(stream:Stream) : void
+    Handle(stream:Stream, method:Request) : void
 }
 @enduml
