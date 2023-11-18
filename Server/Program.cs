@@ -15,7 +15,7 @@ namespace Server
             //MyHTTPServerHost host = new MyHTTPServerHost(new StaticFileHandler(Path.Combine(Environment.CurrentDirectory, "www")));
 
             MyHTTPServerHost host = new MyHTTPServerHost(new ControllersHandler(typeof(Program).Assembly));
-            host.Start();
+            host.StartAsync();
         }
     }
 }

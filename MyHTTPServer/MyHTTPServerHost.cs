@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace MyHTTPServer
 {
@@ -38,25 +39,75 @@ namespace MyHTTPServer
 
             while (true)
             {
-                var client = listener.AcceptTcpClient();
-                using (var networkStream = client.GetStream())
+                using (var client = listener.AcceptTcpClient())
                 {
-                    List<string> buffer = new List<string>();
-
-                    using (var reader = new StreamReader(networkStream))
+                    using (var networkStream = client.GetStream())
                     {
-                        for (string line = null; line != string.Empty; line = reader.ReadLine())
+                        List<string> buffer = new List<string>();
+
+                        using (var reader = new StreamReader(networkStream))
                         {
-                            if (!string.IsNullOrEmpty(line)) buffer.Add(line);
-                            Console.WriteLine(line);
+                            for (string line = null; line != string.Empty; line = reader.ReadLine())
+                            {
+                                if (!string.IsNullOrEmpty(line)) buffer.Add(line);
+                                Console.WriteLine(line);
+                            }
+
+                            var requst = RequestParser.Parse(buffer);
+
+                            _handler.Handle(networkStream, requst);
                         }
-
-                        var requst = RequestParser.Parse(buffer);
-
-                        _handler.Handle(networkStream, requst);
                     }
                 }
             }
+        }
+
+        public void StartAsync()
+        {
+            Console.WriteLine("Starting Server...");
+            TcpListener listener = new TcpListener(IPAddress.Any, 80);
+            listener.Start();
+            Console.WriteLine("done.");
+
+            while (true)
+            {
+                var client = listener.AcceptTcpClient();
+                ProcessClient(client);
+            }
+        }
+
+        private void ProcessClient(TcpClient client)
+        {
+            ThreadPool.QueueUserWorkItem(o => {
+                using (client)
+                {
+                    try
+                    {
+                        using (var networkStream = client.GetStream())
+                        {
+                            List<string> buffer = new List<string>();
+
+                            using (var reader = new StreamReader(networkStream))
+                            {
+                                for (string line = null; line != string.Empty; line = reader.ReadLine())
+                                {
+                                    if (!string.IsNullOrEmpty(line)) buffer.Add(line);
+                                    Console.WriteLine(line);
+                                }
+
+                                var requst = RequestParser.Parse(buffer);
+
+                                _handler.Handle(networkStream, requst);
+                            }
+                        }
+                    }
+                    catch(IOException e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            });
+            
         }
     }
 }
