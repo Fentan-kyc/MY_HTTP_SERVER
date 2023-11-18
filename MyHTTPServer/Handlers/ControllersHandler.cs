@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-
+using System.Threading.Tasks;
 
 namespace MyHTTPServer.Handlers
 {
@@ -51,6 +51,16 @@ namespace MyHTTPServer.Handlers
             }
         }
 
+        public async Task HandleAsync(Stream networkStream, Request request)
+        {
+            if (!_routes.TryGetValue(request.Path, out var func)) await ResponseWriter.WriteStatusAsync(HttpStatusCode.NotFound, networkStream);
+            else
+            {
+                await ResponseWriter.WriteStatusAsync(HttpStatusCode.OK, networkStream);
+                await WriteControllerResponceAsync(func(), networkStream);
+            }
+        }
+
         private void WriteControllerResponce(object response, Stream networkStream)
         {
             switch (response)
@@ -69,6 +79,33 @@ namespace MyHTTPServer.Handlers
 
                 default:
                     WriteControllerResponce(JsonConvert.SerializeObject(response), networkStream);
+                    break;
+            }
+        }
+
+        private async Task WriteControllerResponceAsync(object response, Stream networkStream)
+        {
+            switch (response)
+            {
+                case String:
+                    using (var writer = new StreamWriter(networkStream))
+                    {
+                        writer.Write((String)response);
+                    }
+                    break;
+
+                case Byte[]:
+                    byte[] resByte = (byte[])response;
+                    networkStream.Write(resByte, 0, resByte.Length);
+                    break;
+
+                case Task:
+                    var task = (Task)response;
+                    await WriteControllerResponceAsync(task.GetType().GetProperty("Result").GetValue(task), networkStream);
+                    break;
+
+                default:
+                    await WriteControllerResponceAsync(JsonConvert.SerializeObject(response), networkStream);
                     break;
             }
         }

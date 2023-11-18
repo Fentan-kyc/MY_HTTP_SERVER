@@ -19,5 +19,15 @@ namespace Server.Controllers
                 new User("Nikolay", 23000m)
             };
         }
+
+        public async Task<User[]> IndexAsync()
+        {
+            Task.Delay(5);
+            return new User[]
+            {
+                new User("Dmitrii", 40000m),
+                new User("Nikolay", 23000m)
+            };
+        }
     }
 }

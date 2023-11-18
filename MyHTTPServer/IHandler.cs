@@ -11,5 +11,6 @@ namespace MyHTTPServer
     public interface IHandler
     {
         void Handle(Stream stream, Request method);
+        Task HandleAsync(Stream stream, Request method);
     }
 }

@@ -18,5 +18,10 @@ namespace MyHTTPServer.Handlers
                     writer.WriteLine("Empty");
                 }
         }
+
+        public Task HandleAsync(Stream stream, Request method)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
